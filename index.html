@@ -44,7 +44,8 @@ details[open] summary.lbl{margin-bottom:10px}
 .error{color:var(--no);font-weight:500;min-height:1.2em;margin:10px 0 0;text-align:center}
 
 input{width:100%;font:inherit;font-size:16px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);outline:none}
-input:focus{border-color:var(--accent)}
+input:focus,select:focus{border-color:var(--accent)}
+select{flex:1;min-width:0;font:inherit;font-size:16px;padding:12px 10px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);outline:none}
 .row{display:flex;gap:8px;margin-bottom:8px;align-items:center}
 .emoji-in{width:64px;flex:none;text-align:center}
 
@@ -107,6 +108,12 @@ button{font:inherit;cursor:pointer;color:inherit}
 .big-card .emoji{font-size:96px;line-height:1}
 .big-card .name{font-family:Fraunces,Georgia,serif;font-weight:900;font-size:30px;margin-top:8px}
 .big-card .meta{margin-top:8px;font-size:14px;opacity:.8}
+.big-card.compact{padding:18px 16px;margin-top:8px}
+.big-card.compact .emoji{font-size:64px}
+.big-card.compact .name{font-size:24px}
+.course-lbl{font-family:Fraunces,Georgia,serif;font-weight:900;font-size:20px;margin:22px 0 0}
+.also{color:var(--muted);font-size:14px;margin:8px 4px 0;line-height:1.4}
+.btn.mini{padding:10px;font-size:14px;margin-top:8px}
 .big-card .badge{display:inline-block;background:#2b1d14;color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:700;margin-bottom:10px}
 .res-list{list-style:none;padding:0;margin:0}
 .res-list li{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
@@ -137,7 +144,7 @@ tr.match td{background:color-mix(in srgb,var(--yes) 14%,transparent)}
     <header class="hero">
       <div class="logo">🍽️</div>
       <h1>On mange quoi<br>ce soir&nbsp;?</h1>
-      <p class="sub">Chacun swipe, l'appli trouve le plat qui met tout le monde d'accord.</p>
+      <p class="sub">Entrée, plat ou dessert : chacun swipe, l'appli trouve ce qui met tout le monde d'accord.</p>
     </header>
 
     <div class="panel">
@@ -156,26 +163,41 @@ tr.match td{background:color-mix(in srgb,var(--yes) 14%,transparent)}
     </div>
 
     <div class="panel">
+      <span class="lbl">Au menu ce soir</span>
+      <div class="seg" id="courses">
+        <button data-v="entree">🥗 Entrée</button><button data-v="plat">🍝 Plat</button><button data-v="dessert">🍰 Dessert</button>
+      </div>
+      <p class="hint" id="courses-hint"></p>
+    </div>
+
+    <div class="panel">
       <span class="lbl">Envies du jour <span class="opt">(facultatif)</span></span>
       <div class="chips" id="filters"></div>
     </div>
 
     <div class="panel">
-      <span class="lbl">Nombre de plats à swiper</span>
+      <span class="lbl">Nombre de cartes à swiper</span>
       <div class="seg" id="size">
         <button data-v="10">10</button><button data-v="15">15</button><button data-v="20">20</button>
       </div>
     </div>
 
     <details class="panel">
-      <summary class="lbl">Mes plats à moi <span class="opt" id="custom-count"></span></summary>
-      <form id="custom-form" class="row">
-        <input id="custom-emoji" maxlength="4" placeholder="🍲" class="emoji-in" aria-label="Émoji">
-        <input id="custom-name" maxlength="40" placeholder="Le gratin de mamie" aria-label="Nom du plat">
-        <button class="btn small" type="submit">Ajouter</button>
+      <summary class="lbl">Mes recettes à moi <span class="opt" id="custom-count"></span></summary>
+      <form id="custom-form">
+        <div class="row">
+          <input id="custom-emoji" maxlength="4" placeholder="🍲" class="emoji-in" aria-label="Émoji">
+          <input id="custom-name" maxlength="40" placeholder="Le gratin de mamie" aria-label="Nom de la recette">
+        </div>
+        <div class="row">
+          <select id="custom-course" aria-label="Catégorie">
+            <option value="entree">🥗 Entrée</option><option value="plat" selected>🍝 Plat</option><option value="dessert">🍰 Dessert</option>
+          </select>
+          <button class="btn small" type="submit">Ajouter</button>
+        </div>
       </form>
       <ul id="custom-list" class="custom-list"></ul>
-      <p class="hint">Tes plats entrent toujours dans la partie, quels que soient les filtres.</p>
+      <p class="hint">Tes recettes entrent toujours dans la partie (si leur catégorie est au menu), quels que soient les filtres.</p>
     </details>
 
     <p class="error" id="home-error"></p>
@@ -249,7 +271,7 @@ tr.match td{background:color-mix(in srgb,var(--yes) 14%,transparent)}
       <summary class="lbl">Le détail des votes</summary>
       <div class="table-wrap" id="detail"></div>
     </details>
-    <button class="btn big" id="replay">Rejouer avec d'autres plats</button>
+    <button class="btn big" id="replay">Rejouer avec d'autres idées</button>
     <button class="btn ghost" id="res-share">Renvoyer le lien de la partie</button>
     <button class="link center" id="home-btn">Retour à l'accueil</button>
   </section>
@@ -260,11 +282,19 @@ tr.match td{background:color-mix(in srgb,var(--yes) 14%,transparent)}
 <script src="dishes.js"></script>
 <script>
 /* ---------- Données ---------- */
-// La liste des plats est dans dishes.js (window.PLATS)
-const DISHES = (window.PLATS || []).map(p => [p.emoji, p.nom, (p.tags || []).join(' ')]);
+// La liste des entrées, plats et desserts est dans dishes.js (window.PLATS)
+// Chaque carte : [emoji, nom, "catégorie tags…"]
+const DISHES = (window.PLATS || []).map(p => [p.emoji, p.nom, [p.type || 'plat', ...(p.tags || [])].join(' ')]);
+const COURSE_ORDER = ['entree', 'plat', 'dessert'];
+const COURSES = {
+  entree:  {label:'🥗 Entrée',  plural:'entrées',  empty:"Pas d'entrée qui fasse l'unanimité : on passe direct au plat ? 😄"},
+  plat:    {label:'🍝 Plat',    plural:'plats',    empty:"Personne n'a envie de rien. Pâtes au beurre ? 🧈"},
+  dessert: {label:'🍰 Dessert', plural:'desserts', empty:"Aucun dessert ne vous tente. Un carré de chocolat ? 🍫"},
+};
+function courseOf(d){ const t = String(d[2] || '').split(' '); return t.includes('entree') ? 'entree' : t.includes('dessert') ? 'dessert' : 'plat'; }
 const ORIGINS = ['france', 'monde'];
 const FILTERS = {rapide:'⚡ Rapide', vege:'🌱 Végé', leger:'🪶 Léger', reconfort:'🛋️ Réconfort', commande:'🛵 À commander', france:'🥖 Cuisine française', monde:'🌍 Du monde'};
-const TAG_LABELS = {...FILTERS, perso:'💛 Mon plat'};
+const TAG_LABELS = {entree:'🥗 Entrée', plat:'🍝 Plat', dessert:'🍰 Dessert', ...FILTERS, perso:'💛 Ma recette'};
 
 /* ---------- Outils ---------- */
 const $ = s => document.querySelector(s);
@@ -298,6 +328,7 @@ function confetti(){
     document.body.appendChild(s); setTimeout(()=>s.remove(),4200);
   }
 }
+function de(name){ return /^[aeiouyhàâäéèêëîïôöûü]/i.test(name) ? "d'"+name : 'de '+name; }
 function listNames(a){ return a.length<2 ? a.join('') : a.slice(0,-1).join(', ')+' et '+a[a.length-1]; }
 
 /* ---------- État ---------- */
@@ -305,6 +336,8 @@ let mode = store.get('omq-mode','local');
 let names = store.get('omq-names',['','']);
 let custom = store.get('omq-custom',[]);
 let filters = [];
+let courses = store.get('omq-courses',['plat']).filter(c => COURSES[c]);
+if(!courses.length) courses = ['plat'];
 let size = 15;
 let game = null;   // {mode, deck:[[emoji,nom,tags]], players:[{n,v}]}
 let turn = null;   // {p, name, idx, votes}
@@ -321,6 +354,10 @@ function renderHome(){
   renderPlayers();
   $('#filters').innerHTML = Object.entries(FILTERS).map(([k,v]) =>
     `<button data-t="${k}" class="${filters.includes(k)?'on':''}">${v}</button>`).join('');
+  document.querySelectorAll('#courses button').forEach(b => b.classList.toggle('on', courses.includes(b.dataset.v)));
+  $('#courses-hint').textContent = courses.length > 1
+    ? "Menu complet : les cartes sont réparties entre les catégories, et l'appli trouve un gagnant pour chacune."
+    : "Tu peux en choisir plusieurs : entrée + plat + dessert = menu complet.";
   document.querySelectorAll('#size button').forEach(b => b.classList.toggle('on', +b.dataset.v === size));
   renderCustom();
 }
@@ -334,9 +371,15 @@ function renderPlayers(){
 function renderCustom(){
   $('#custom-count').textContent = custom.length ? `(${custom.length})` : '';
   $('#custom-list').innerHTML = custom.map((c,i) =>
-    `<li><span>${esc(c[0])}</span><span>${esc(c[1])}</span><button class="icon" data-i="${i}" aria-label="Supprimer">✕</button></li>`).join('');
+    `<li><span>${esc(c[0])}</span><span>${esc(c[1])} <span class="opt">· ${COURSES[c[2]||'plat'].label.split(' ')[1]}</span></span><button class="icon" data-i="${i}" aria-label="Supprimer">✕</button></li>`).join('');
 }
 $('#mode').addEventListener('click', e => { const b=e.target.closest('button'); if(!b) return; mode=b.dataset.v; store.set('omq-mode',mode); renderHome(); });
+$('#courses').addEventListener('click', e => {
+  const b=e.target.closest('button'); if(!b) return; const c=b.dataset.v;
+  if(courses.includes(c)){ if(courses.length===1){ toast('Garde au moins une catégorie'); return; } courses = courses.filter(x=>x!==c); }
+  else courses = COURSE_ORDER.filter(x => x===c || courses.includes(x));
+  store.set('omq-courses',courses); renderHome();
+});
 $('#size').addEventListener('click', e => { const b=e.target.closest('button'); if(!b) return; size=+b.dataset.v; renderHome(); });
 $('#filters').addEventListener('click', e => {
   const b=e.target.closest('button'); if(!b) return; const t=b.dataset.t;
@@ -355,7 +398,7 @@ $('#custom-form').addEventListener('submit', e => {
   e.preventDefault();
   const n=$('#custom-name').value.trim(); if(!n) return;
   const em=$('#custom-emoji').value.trim() || '🍲';
-  custom.push([em,n]); store.set('omq-custom',custom);
+  custom.push([em,n,$('#custom-course').value]); store.set('omq-custom',custom);
   $('#custom-name').value=''; $('#custom-emoji').value=''; renderCustom(); $('#custom-name').focus();
 });
 $('#custom-list').addEventListener('click', e => {
@@ -367,12 +410,19 @@ function buildDeck(){
   // Les origines (française / du monde) s'additionnent, les autres filtres se cumulent.
   const origins = filters.filter(t => ORIGINS.includes(t));
   const others = filters.filter(t => !ORIGINS.includes(t));
-  const pool = DISHES.filter(d => {
-    const tags = d[2].split(' ');
-    return others.every(t => tags.includes(t)) && (!origins.length || origins.some(t => tags.includes(t)));
+  const ok = d => { const tags = d[2].split(' ');
+    return others.every(t => tags.includes(t)) && (!origins.length || origins.some(t => tags.includes(t))); };
+  const list = COURSE_ORDER.filter(c => courses.includes(c));
+  const per = list.length > 1 ? Math.max(4, Math.round(size / list.length)) : size;
+  const deck = [], missing = [];
+  list.forEach(c => {
+    const pool = DISHES.filter(d => courseOf(d) === c && ok(d));
+    const mine = shuffle(custom.filter(x => (x[2] || 'plat') === c).map(x => [x[0], x[1], c + ' perso'])).slice(0, per);
+    const part = shuffle(mine.concat(shuffle(pool)).slice(0, per));
+    if(part.length < 2) missing.push(COURSES[c].plural);
+    deck.push(...part);   // entrées, puis plats, puis desserts
   });
-  const mine = shuffle(custom.map(c => [c[0], c[1], 'perso'])).slice(0,size);
-  return shuffle(mine.concat(shuffle(pool)).slice(0,size));
+  return {deck, missing};
 }
 function uniq(list){
   const seen={};
@@ -380,8 +430,8 @@ function uniq(list){
 }
 $('#start').onclick = () => {
   const err=$('#home-error'); err.textContent='';
-  const deck = buildDeck();
-  if(deck.length < 3){ err.textContent="Pas assez de plats avec ces filtres : retire une envie ou ajoute tes plats."; return; }
+  const {deck, missing} = buildDeck();
+  if(missing.length || deck.length < 3){ err.textContent=`Pas assez ${de(listNames(missing.length ? missing : ['idées']))} avec ces filtres : retire une envie ou ajoute tes recettes.`; return; }
   if(mode === 'remote'){
     const me=(names[0]||'').trim();
     if(!me){ err.textContent="Indique ton prénom pour que les autres sachent qui a voté."; return; }
@@ -411,10 +461,11 @@ function cardHTML(d, back){
     <div class="stamp yes">MIAM</div><div class="stamp no">BOF</div><div class="stamp star">COUP DE CŒUR</div>
     <div class="emoji">${esc(d[0])}</div><div class="name">${esc(d[1])}</div><div class="tags">${tags}</div></div>`;
 }
+function courseList(){ return COURSE_ORDER.filter(c => game.deck.some(d => courseOf(d) === c)); }
 function renderDeck(){
   const deck=game.deck, i=turn.idx;
   const solo = game.mode==='remote' || game.players.length<2;
-  $('#who').innerHTML = `${solo ? 'À toi' : 'Au tour de '+esc(turn.name)}<small>${Math.min(i+1,deck.length)} / ${deck.length}</small>`;
+  $('#who').innerHTML = `${solo ? 'À toi' : 'Au tour '+de(esc(turn.name))}<small>${Math.min(i+1,deck.length)} / ${deck.length}${courseList().length > 1 && deck[i] ? ' · ' + COURSES[courseOf(deck[i])].label : ''}</small>`;
   $('#bar').style.width = (i/deck.length*100)+'%';
   $('#undo').disabled = i===0;
   $('#deck').innerHTML = (deck[i+1] ? cardHTML(deck[i+1], true) : '') + (deck[i] ? cardHTML(deck[i]) : '');
@@ -518,7 +569,7 @@ $('#res-share').onclick = shareLink;
 
 function showJoin(){
   const n = game.players.length;
-  $('#join-sub').textContent = (n ? `Déjà voté : ${listNames(game.players.map(p=>p.n))}. ` : '') + `${game.deck.length} plats t'attendent.`;
+  $('#join-sub').textContent = (n ? `Déjà voté : ${listNames(game.players.map(p=>p.n))}. ` : '') + `${game.deck.length} propositions t'attendent (${listNames(courseList().map(c => COURSES[c].plural))}).`;
   $('#join-name').value = names[0] || '';
   $('#join-results').hidden = !n;
   $('#join-error').textContent = '';
@@ -546,11 +597,11 @@ function compute(){
     return {d, i, score, yes, stars, nos, match: n>0 && yes===n};
   });
 }
-function bigCard(r, badge){
+function bigCard(r, badge, compact){
   const n = game.players.length;
-  let meta = r.stars.length ? `★ Coup de cœur de ${listNames(r.stars)}` : '';
+  let meta = r.stars.length ? `★ Coup de cœur ${de(listNames(r.stars))}` : '';
   if(!r.match && n>1) meta = `👍 ${r.yes}/${n}` + (r.nos.length ? ` · pas pour ${listNames(r.nos)}` : '');
-  return `<div class="big-card" style="--h:${hue(r.d[1])}">
+  return `<div class="big-card${compact ? ' compact' : ''}" style="--h:${hue(r.d[1])}">
     ${badge ? `<div class="badge">${badge}</div>` : ''}
     <div class="emoji">${esc(r.d[0])}</div><div class="name">${esc(r.d[1])}</div>
     ${meta ? `<div class="meta">${esc(meta)}</div>` : ''}</div>`;
@@ -560,57 +611,93 @@ function li(r){
   const m = r.match ? (r.stars.length ? '★'.repeat(r.stars.length) : '') : `${r.yes}/${n}`;
   return `<li><span class="e">${esc(r.d[0])}</span><span class="n">${esc(r.d[1])}</span><span class="m">${m}</span></li>`;
 }
+const byScore = (a,b) => b.score - a.score;
+const byCompromise = (a,b) => b.yes - a.yes || b.score - a.score;
 function showResults(){
-  const rows = compute(), n = game.players.length;
-  const matches = rows.filter(r => r.match).sort((a,b) => b.score-a.score);
-  let html = '';
-  if(matches.length){
-    const plural = matches.length > 1;
-    html += `<header class="hero"><div class="logo">🎉</div><h1>${plural ? 'Il y a des matchs !' : "C'est un match !"}</h1>
-      <p class="sub">${n>1 ? "Tout le monde est d'accord" : 'Tes envies du soir'}${plural ? ` sur ${matches.length} plats. Le favori :` : '.'}</p></header>`;
-    html += `<div id="winner">${bigCard(matches[0], plural ? 'Le favori' : '')}</div>`;
-    if(plural){
-      html += `<button class="btn" id="dice">🎲 Laisser le hasard trancher</button>
-        <div class="panel"><span class="lbl">Les autres matchs</span><ul class="res-list">${matches.slice(1).map(li).join('')}</ul></div>`;
+  const rows = compute(), n = game.players.length, cs = courseList();
+  let html = '', anyMatch = false;
+  if(cs.length === 1){
+    const C = COURSES[cs[0]];
+    const matches = rows.filter(r => r.match).sort(byScore);
+    anyMatch = matches.length > 0;
+    if(matches.length){
+      const plural = matches.length > 1;
+      html += `<header class="hero"><div class="logo">🎉</div><h1>${plural ? 'Il y a des matchs !' : "C'est un match !"}</h1>
+        <p class="sub">${n>1 ? "Tout le monde est d'accord" : 'Tes envies du soir'}${plural ? ` sur ${matches.length} ${C.plural}. Le favori :` : '.'}</p></header>`;
+      html += `<div id="winner">${bigCard(matches[0], plural ? 'Le favori' : '')}</div>`;
+      if(plural){
+        html += `<button class="btn" id="dice">🎲 Laisser le hasard trancher</button>
+          <div class="panel"><span class="lbl">Les autres matchs</span><ul class="res-list">${matches.slice(1).map(li).join('')}</ul></div>`;
+      }
+    } else {
+      const best = rows.filter(r => r.yes>0).sort(byCompromise).slice(0,4);
+      html += `<header class="hero"><div class="logo">🤝</div><h1>Pas d'unanimité…</h1>
+        <p class="sub">${best.length ? 'Voici le meilleur compromis.' : C.empty}</p></header>`;
+      if(best.length){
+        html += `<div id="winner">${bigCard(best[0], 'Meilleur compromis')}</div>`;
+        if(best.length>1) html += `<div class="panel"><span class="lbl">Juste derrière</span><ul class="res-list">${best.slice(1).map(li).join('')}</ul></div>`;
+      }
     }
+    $('#res').innerHTML = html + remoteNote(n);
+    const dice = $('#dice');
+    if(dice) dice.onclick = () => spin(matches, $('#winner'), dice, false);
   } else {
-    const best = rows.filter(r => r.yes>0).sort((a,b) => b.yes-a.yes || b.score-a.score).slice(0,4);
-    html += `<header class="hero"><div class="logo">🤝</div><h1>Pas d'unanimité…</h1>
-      <p class="sub">${best.length ? 'Voici le meilleur compromis.' : "Personne n'a envie de rien. Pâtes au beurre ? 🧈"}</p></header>`;
-    if(best.length){
-      html += `<div id="winner">${bigCard(best[0], 'Meilleur compromis')}</div>`;
-      if(best.length>1) html += `<div class="panel"><span class="lbl">Juste derrière</span><ul class="res-list">${best.slice(1).map(li).join('')}</ul></div>`;
-    }
+    // Menu complet : un gagnant par catégorie
+    const picks = cs.map(c => {
+      const rs = rows.filter(r => courseOf(r.d) === c);
+      const m = rs.filter(r => r.match).sort(byScore);
+      return {c, m, best: m.length ? m : rs.filter(r => r.yes > 0).sort(byCompromise)};
+    });
+    const allMatch = picks.every(p => p.m.length);
+    anyMatch = picks.some(p => p.m.length);
+    html += `<header class="hero"><div class="logo">${allMatch ? '🎉' : '🍽️'}</div>
+      <h1>${n===1 ? 'Ton menu du soir' : (allMatch ? 'Votre menu est prêt !' : 'Votre menu du soir')}</h1>
+      <p class="sub">${allMatch ? (n>1 ? "Tout le monde est d'accord à chaque étape." : 'Tes favoris pour chaque étape.') : 'Avec un peu de compromis sur certaines étapes.'}</p></header>`;
+    picks.forEach(p => {
+      const C = COURSES[p.c];
+      html += `<div class="course-lbl">${C.label}</div>`;
+      if(!p.best.length){ html += `<div class="panel center">${C.empty}</div>`; return; }
+      const badge = p.m.length ? (p.m.length > 1 ? 'Le favori' : "C'est un match") : 'Meilleur compromis';
+      html += `<div id="win-${p.c}">${bigCard(p.best[0], badge, true)}</div>`;
+      if(p.m.length > 1) html += `<button class="btn ghost mini" data-dice="${p.c}">🎲 Tirer au sort parmi ${p.m.length} ${C.plural}</button>`;
+      const others = p.best.slice(1, 4);
+      if(others.length) html += `<p class="also">${p.m.length ? 'Aussi d\'accord' : 'Juste derrière'} : ${others.map(r => esc(r.d[0] + ' ' + r.d[1])).join(' · ')}</p>`;
+    });
+    $('#res').innerHTML = html + remoteNote(n);
+    document.querySelectorAll('[data-dice]').forEach(btn => {
+      const p = picks.find(x => x.c === btn.dataset.dice);
+      btn.onclick = () => spin(p.m, $('#win-' + p.c), btn, true);
+    });
   }
-  if(game.mode==='remote') html += `<p class="hint center">Résultats avec ${n} votant${n>1?'s':''} : ${esc(listNames(game.players.map(p=>p.n)))}. Les autres peuvent encore voter avec le lien.</p>`;
-  $('#res').innerHTML = html;
 
-  $('#detail').innerHTML = `<table><thead><tr><th>Plat</th>${game.players.map(p=>`<th>${esc(p.n)}</th>`).join('')}</tr></thead><tbody>
+  $('#detail').innerHTML = `<table><thead><tr><th>Proposition</th>${game.players.map(p=>`<th>${esc(p.n)}</th>`).join('')}</tr></thead><tbody>
     ${rows.map(r => `<tr class="${r.match?'match':''}"><td>${esc(r.d[0])} ${esc(r.d[1])}</td>${game.players.map(p => {
       const v = +(p.v||'')[r.i] || 0; return `<td class="v${v}">${['·','✓','★'][v]}</td>`; }).join('')}</tr>`).join('')}
   </tbody></table>`;
   $('#res-share').hidden = game.mode !== 'remote';
-  $('#replay').textContent = game.mode==='remote' ? 'Nouvelle partie' : "Rejouer avec d'autres plats";
-
-  const dice = $('#dice');
-  if(dice) dice.onclick = () => spin(matches);
+  $('#replay').textContent = game.mode==='remote' ? 'Nouvelle partie' : "Rejouer avec d'autres idées";
   show('s-results');
-  if(matches.length) setTimeout(confetti, 250);
+  if(anyMatch) setTimeout(confetti, 250);
 }
-function spin(list){
+function remoteNote(n){
+  return game.mode==='remote' ? `<p class="hint center">Résultats avec ${n} votant${n>1?'s':''} : ${esc(listNames(game.players.map(p=>p.n)))}. Les autres peuvent encore voter avec le lien.</p>` : '';
+}
+function spin(list, target, btn, compact){
   const total = list.reduce((s,r) => s + r.score + 1, 0);
   let x = Math.random()*total, pick = list[0];
   for(const r of list){ x -= r.score + 1; if(x <= 0){ pick = r; break; } }
   let t = 0; const steps = 16;
-  $('#dice').disabled = true;
+  btn.disabled = true;
   (function tick(){
-    if(t < steps){ $('#winner').innerHTML = bigCard(list[t % list.length], '🎲 …'); t++; setTimeout(tick, 60 + t*14); }
-    else { $('#winner').innerHTML = bigCard(pick, 'Le hasard a choisi 🎲'); $('#dice').disabled = false; confetti(); }
+    if(!game || !target.isConnected || !$('#s-results').classList.contains('active')){ btn.disabled = false; return; }
+    if(t < steps){ target.innerHTML = bigCard(list[t % list.length], '🎲 …', compact); t++; setTimeout(tick, 60 + t*14); }
+    else { target.innerHTML = bigCard(pick, 'Le hasard a choisi 🎲', compact); btn.disabled = false; confetti(); }
   })();
 }
 $('#replay').onclick = () => {
   if(game.mode === 'remote'){ goHome(); return; }
-  game.deck = buildDeck(); game.players.forEach(p => p.v = null); startTurn(0);
+  const b = buildDeck(); if(b.deck.length < 3){ goHome(); return; }
+  game.deck = b.deck; game.players.forEach(p => p.v = null); startTurn(0);
 };
 $('#home-btn').onclick = goHome;
 function goHome(){

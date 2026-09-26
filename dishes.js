@@ -1,7 +1,9 @@
 /*
- * Liste des plats de « On mange quoi ce soir ? »
- * ------------------------------------------------
- * Une ligne par plat : { emoji, nom, tags }
+ * Liste des entrées, plats et desserts de « On mange quoi ce soir ? »
+ * --------------------------------------------------------------------
+ * Une ligne par idée : { emoji, nom, type, tags }
+ *
+ * type :  'entree', 'plat' ou 'dessert'  (sans type, c'est un plat)
  *
  * Tags disponibles (ce sont les filtres de l'écran d'accueil) :
  *   rapide    → prêt en 30 minutes environ
@@ -12,9 +14,13 @@
  *   france    → cuisine française
  *   monde     → cuisine du monde
  *
- * Pour ajouter un plat, copie une ligne, change-la, et n'oublie pas la virgule à la fin.
+ * Pour ajouter une idée, copie une ligne, change-la, et n'oublie pas la virgule à la fin.
  */
 window.PLATS = [
+  // ======================================================================
+  // PLATS  (type absent = plat)
+  // ======================================================================
+
   // ---------- Cuisine française ----------
   { emoji: '🍲', nom: 'Pot-au-feu',                    tags: ['reconfort', 'france'] },
   { emoji: '🍷', nom: 'Bœuf bourguignon',              tags: ['reconfort', 'france'] },
@@ -195,4 +201,200 @@ window.PLATS = [
   { emoji: '🔥', nom: 'Barbecue',                      tags: ['reconfort'] },
   { emoji: '🧇', nom: 'Brunch du soir',                tags: ['vege', 'reconfort'] },
   { emoji: '🧊', nom: 'Les restes du frigo',           tags: ['rapide', 'leger'] },
+
+  // ======================================================================
+  // ENTRÉES  (type: 'entree')
+  // ======================================================================
+
+  // ---------- Entrées françaises ----------
+  { emoji: '🥚', nom: 'Œufs mimosa', type: 'entree', tags: ['rapide', 'vege', 'france'] },
+  { emoji: '🥬', nom: 'Poireaux vinaigrette', type: 'entree', tags: ['vege', 'leger', 'france'] },
+  { emoji: '🥕', nom: 'Carottes râpées au citron', type: 'entree', tags: ['rapide', 'vege', 'leger', 'france'] },
+  { emoji: '🥗', nom: 'Céleri rémoulade', type: 'entree', tags: ['rapide', 'vege', 'leger', 'france'] },
+  { emoji: '🫘', nom: 'Salade de lentilles vinaigrette', type: 'entree', tags: ['vege', 'leger', 'france'] },
+  { emoji: '🥗', nom: 'Salade de betteraves & noix', type: 'entree', tags: ['rapide', 'vege', 'leger', 'france'] },
+  { emoji: '🥔', nom: 'Salade piémontaise', type: 'entree', tags: ['reconfort', 'france'] },
+  { emoji: '🥓', nom: 'Salade lyonnaise', type: 'entree', tags: ['france'] },
+  { emoji: '🌸', nom: 'Radis beurre & fleur de sel', type: 'entree', tags: ['rapide', 'vege', 'leger', 'france'] },
+  { emoji: '🌿', nom: 'Artichaut vinaigrette', type: 'entree', tags: ['vege', 'leger', 'france'] },
+  { emoji: '🌱', nom: 'Asperges sauce mousseline', type: 'entree', tags: ['vege', 'leger', 'france'] },
+  { emoji: '🍈', nom: 'Melon & jambon cru', type: 'entree', tags: ['rapide', 'leger', 'france'] },
+  { emoji: '🐖', nom: 'Terrine de campagne & cornichons', type: 'entree', tags: ['rapide', 'france'] },
+  { emoji: '🍞', nom: 'Rillettes sur pain grillé', type: 'entree', tags: ['rapide', 'france'] },
+  { emoji: '🥧', nom: 'Pâté en croûte', type: 'entree', tags: ['france'] },
+  { emoji: '🦆', nom: 'Foie gras & pain d\'épices', type: 'entree', tags: ['france'] },
+  { emoji: '🐌', nom: 'Escargots au beurre persillé', type: 'entree', tags: ['france'] },
+  { emoji: '🦪', nom: 'Plateau d\'huîtres', type: 'entree', tags: ['rapide', 'leger', 'france'] },
+  { emoji: '🦐', nom: 'Avocat-crevettes', type: 'entree', tags: ['rapide', 'leger', 'france'] },
+  { emoji: '🐟', nom: 'Saumon fumé & blinis', type: 'entree', tags: ['rapide', 'leger', 'france'] },
+  { emoji: '🍣', nom: 'Tartare de saumon', type: 'entree', tags: ['rapide', 'leger', 'france'] },
+  { emoji: '🐟', nom: 'Rillettes de thon', type: 'entree', tags: ['rapide', 'leger', 'france'] },
+  { emoji: '🥚', nom: 'Œuf cocotte à la crème', type: 'entree', tags: ['rapide', 'vege', 'france'] },
+  { emoji: '🍷', nom: 'Œufs en meurette', type: 'entree', tags: ['reconfort', 'france'] },
+  { emoji: '🥚', nom: 'Œufs à la coque & mouillettes', type: 'entree', tags: ['rapide', 'vege', 'reconfort', 'france'] },
+  { emoji: '🧀', nom: 'Gougères au comté', type: 'entree', tags: ['vege', 'france'] },
+  { emoji: '🐐', nom: 'Toasts de chèvre au miel', type: 'entree', tags: ['rapide', 'vege', 'france'] },
+  { emoji: '🍅', nom: 'Tartelettes tomate-chèvre', type: 'entree', tags: ['vege', 'france'] },
+  { emoji: '🫒', nom: 'Cake salé olives-jambon', type: 'entree', tags: ['france'] },
+  { emoji: '🥐', nom: 'Feuilletés à la saucisse', type: 'entree', tags: ['france'] },
+  { emoji: '🧅', nom: 'Pissaladière', type: 'entree', tags: ['france'] },
+  { emoji: '🫓', nom: 'Socca niçoise', type: 'entree', tags: ['rapide', 'vege', 'france'] },
+  { emoji: '🍟', nom: 'Panisses', type: 'entree', tags: ['vege', 'france'] },
+  { emoji: '🫒', nom: 'Tapenade & gressins', type: 'entree', tags: ['rapide', 'vege', 'france'] },
+  { emoji: '🎃', nom: 'Velouté de potimarron', type: 'entree', tags: ['vege', 'leger', 'reconfort', 'france'] },
+  { emoji: '🍄', nom: 'Velouté de champignons', type: 'entree', tags: ['vege', 'reconfort', 'france'] },
+  { emoji: '🥦', nom: 'Crème Du Barry (chou-fleur)', type: 'entree', tags: ['vege', 'reconfort', 'france'] },
+  { emoji: '🥔', nom: 'Soupe poireaux-pommes de terre', type: 'entree', tags: ['vege', 'reconfort', 'france'] },
+  { emoji: '🫛', nom: 'Velouté petits pois-menthe', type: 'entree', tags: ['rapide', 'vege', 'leger', 'france'] },
+  { emoji: '🐟', nom: 'Soupe de poissons & rouille', type: 'entree', tags: ['reconfort', 'france'] },
+  { emoji: '🥬', nom: 'Terrine de légumes', type: 'entree', tags: ['vege', 'leger', 'france'] },
+  { emoji: '🍄', nom: 'Champignons farcis', type: 'entree', tags: ['vege', 'france'] },
+
+  // ---------- Entrées du monde ----------
+  { emoji: '🧆', nom: 'Houmous & crudités', type: 'entree', tags: ['rapide', 'vege', 'leger', 'monde'] },
+  { emoji: '🍆', nom: 'Caviar d\'aubergine', type: 'entree', tags: ['vege', 'leger', 'monde'] },
+  { emoji: '🥒', nom: 'Tzatziki & pain pita', type: 'entree', tags: ['rapide', 'vege', 'leger', 'monde'] },
+  { emoji: '🍇', nom: 'Feuilles de vigne farcies', type: 'entree', tags: ['vege', 'monde'] },
+  { emoji: '🥗', nom: 'Fattouche', type: 'entree', tags: ['rapide', 'vege', 'leger', 'monde'] },
+  { emoji: '🥕', nom: 'Salade de carottes au cumin', type: 'entree', tags: ['rapide', 'vege', 'leger', 'monde'] },
+  { emoji: '🍅', nom: 'Zaalouk', type: 'entree', tags: ['vege', 'leger', 'monde'] },
+  { emoji: '🍲', nom: 'Harira', type: 'entree', tags: ['reconfort', 'monde'] },
+  { emoji: '🥙', nom: 'Assiette de mezzés', type: 'entree', tags: ['commande', 'monde'] },
+  { emoji: '🧀', nom: 'Saganaki (fromage grillé)', type: 'entree', tags: ['rapide', 'vege', 'monde'] },
+  { emoji: '🧀', nom: 'Burrata & tomates cerises', type: 'entree', tags: ['rapide', 'vege', 'monde'] },
+  { emoji: '🍅', nom: 'Salade caprese', type: 'entree', tags: ['rapide', 'vege', 'leger', 'monde'] },
+  { emoji: '🍖', nom: 'Vitello tonnato', type: 'entree', tags: ['monde'] },
+  { emoji: '🫒', nom: 'Assiette d\'antipasti', type: 'entree', tags: ['rapide', 'monde'] },
+  { emoji: '🍙', nom: 'Arancini', type: 'entree', tags: ['vege', 'monde'] },
+  { emoji: '🥩', nom: 'Carpaccio de bœuf', type: 'entree', tags: ['rapide', 'leger', 'monde'] },
+  { emoji: '🍉', nom: 'Salade pastèque-feta-menthe', type: 'entree', tags: ['rapide', 'vege', 'leger', 'monde'] },
+  { emoji: '🍅', nom: 'Pan con tomate', type: 'entree', tags: ['rapide', 'vege', 'monde'] },
+  { emoji: '🥔', nom: 'Patatas bravas', type: 'entree', tags: ['vege', 'monde'] },
+  { emoji: '🫑', nom: 'Pimientos de Padrón', type: 'entree', tags: ['rapide', 'vege', 'leger', 'monde'] },
+  { emoji: '🥘', nom: 'Croquetas au jambon', type: 'entree', tags: ['monde'] },
+  { emoji: '🍅', nom: 'Salmorejo', type: 'entree', tags: ['vege', 'leger', 'monde'] },
+  { emoji: '🫑', nom: 'Poivrons marinés à l\'huile d\'olive', type: 'entree', tags: ['vege', 'leger', 'monde'] },
+  { emoji: '🍤', nom: 'Tempura de légumes', type: 'entree', tags: ['vege', 'monde'] },
+  { emoji: '🍤', nom: 'Crevettes tempura', type: 'entree', tags: ['commande', 'monde'] },
+  { emoji: '🍜', nom: 'Soupe miso', type: 'entree', tags: ['rapide', 'leger', 'monde'] },
+  { emoji: '🫛', nom: 'Edamame au sel', type: 'entree', tags: ['rapide', 'vege', 'leger', 'commande', 'monde'] },
+  { emoji: '🥒', nom: 'Salade de concombre au sésame', type: 'entree', tags: ['rapide', 'vege', 'leger', 'monde'] },
+  { emoji: '🐟', nom: 'Tataki de thon', type: 'entree', tags: ['rapide', 'leger', 'monde'] },
+  { emoji: '🥢', nom: 'Nems', type: 'entree', tags: ['commande', 'monde'] },
+  { emoji: '🧅', nom: 'Onion bhajis', type: 'entree', tags: ['vege', 'commande', 'monde'] },
+  { emoji: '🍲', nom: 'Soupe tom kha kaï', type: 'entree', tags: ['leger', 'commande', 'monde'] },
+  { emoji: '🥭', nom: 'Salade de papaye verte', type: 'entree', tags: ['leger', 'monde'] },
+  { emoji: '🌽', nom: 'Elote (maïs grillé à la mexicaine)', type: 'entree', tags: ['rapide', 'vege', 'monde'] },
+  { emoji: '🥯', nom: 'Blinis & tarama', type: 'entree', tags: ['rapide', 'monde'] },
+  { emoji: '🥑', nom: 'Toast avocat & œuf poché', type: 'entree', tags: ['rapide', 'vege', 'monde'] },
+  { emoji: '🍏', nom: 'Salade Waldorf', type: 'entree', tags: ['rapide', 'vege', 'leger', 'monde'] },
+  { emoji: '🥥', nom: 'Velouté butternut coco-curry', type: 'entree', tags: ['vege', 'leger', 'reconfort', 'monde'] },
+
+  // ======================================================================
+  // DESSERTS  (type: 'dessert')
+  // ======================================================================
+
+  // ---------- Desserts français ----------
+  { emoji: '🍫', nom: 'Mousse au chocolat', type: 'dessert', tags: ['vege', 'france'] },
+  { emoji: '🍮', nom: 'Crème brûlée', type: 'dessert', tags: ['vege', 'france'] },
+  { emoji: '☁️', nom: 'Île flottante', type: 'dessert', tags: ['vege', 'france'] },
+  { emoji: '🍎', nom: 'Tarte Tatin', type: 'dessert', tags: ['vege', 'reconfort', 'france'] },
+  { emoji: '🥧', nom: 'Tarte aux pommes', type: 'dessert', tags: ['vege', 'france'] },
+  { emoji: '🍋', nom: 'Tarte au citron meringuée', type: 'dessert', tags: ['vege', 'france'] },
+  { emoji: '🍓', nom: 'Tarte aux fraises', type: 'dessert', tags: ['vege', 'leger', 'france'] },
+  { emoji: '🍐', nom: 'Tarte Bourdaloue (poires-amandes)', type: 'dessert', tags: ['vege', 'france'] },
+  { emoji: '🍫', nom: 'Tarte au chocolat', type: 'dessert', tags: ['vege', 'france'] },
+  { emoji: '🍑', nom: 'Tarte aux abricots', type: 'dessert', tags: ['vege', 'leger', 'france'] },
+  { emoji: '🍬', nom: 'Tarte au sucre', type: 'dessert', tags: ['vege', 'reconfort', 'france'] },
+  { emoji: '🍒', nom: 'Clafoutis aux cerises', type: 'dessert', tags: ['vege', 'reconfort', 'france'] },
+  { emoji: '🥮', nom: 'Far breton', type: 'dessert', tags: ['vege', 'reconfort', 'france'] },
+  { emoji: '🍫', nom: 'Fondant au chocolat', type: 'dessert', tags: ['rapide', 'vege', 'reconfort', 'france'] },
+  { emoji: '🌋', nom: 'Moelleux au cœur coulant', type: 'dessert', tags: ['rapide', 'vege', 'reconfort', 'france'] },
+  { emoji: '🍨', nom: 'Profiteroles', type: 'dessert', tags: ['vege', 'france'] },
+  { emoji: '⚡', nom: 'Éclairs au chocolat', type: 'dessert', tags: ['vege', 'commande', 'france'] },
+  { emoji: '🌰', nom: 'Paris-Brest', type: 'dessert', tags: ['vege', 'commande', 'france'] },
+  { emoji: '🍰', nom: 'Mille-feuille', type: 'dessert', tags: ['vege', 'commande', 'france'] },
+  { emoji: '🌈', nom: 'Macarons', type: 'dessert', tags: ['vege', 'commande', 'france'] },
+  { emoji: '🍚', nom: 'Riz au lait', type: 'dessert', tags: ['vege', 'reconfort', 'france'] },
+  { emoji: '🍮', nom: 'Crème caramel', type: 'dessert', tags: ['vege', 'france'] },
+  { emoji: '🥧', nom: 'Flan pâtissier', type: 'dessert', tags: ['vege', 'reconfort', 'france'] },
+  { emoji: '🥛', nom: 'Œufs au lait', type: 'dessert', tags: ['rapide', 'vege', 'reconfort', 'france'] },
+  { emoji: '🍫', nom: 'Crème au chocolat maison', type: 'dessert', tags: ['vege', 'reconfort', 'france'] },
+  { emoji: '🍐', nom: 'Poire Belle-Hélène', type: 'dessert', tags: ['vege', 'france'] },
+  { emoji: '🍞', nom: 'Pain perdu', type: 'dessert', tags: ['rapide', 'vege', 'reconfort', 'france'] },
+  { emoji: '🍊', nom: 'Crêpes Suzette', type: 'dessert', tags: ['vege', 'france'] },
+  { emoji: '🧇', nom: 'Gaufres & chantilly', type: 'dessert', tags: ['vege', 'reconfort', 'france'] },
+  { emoji: '🍓', nom: 'Charlotte aux fraises', type: 'dessert', tags: ['france'] },
+  { emoji: '🍓', nom: 'Fraisier', type: 'dessert', tags: ['vege', 'france'] },
+  { emoji: '🏔️', nom: 'Mont-Blanc aux marrons', type: 'dessert', tags: ['vege', 'france'] },
+  { emoji: '🍪', nom: 'Madeleines tièdes', type: 'dessert', tags: ['rapide', 'vege', 'france'] },
+  { emoji: '🥮', nom: 'Financiers', type: 'dessert', tags: ['vege', 'france'] },
+  { emoji: '🍮', nom: 'Cannelés', type: 'dessert', tags: ['vege', 'france'] },
+  { emoji: '🧈', nom: 'Kouign-amann', type: 'dessert', tags: ['vege', 'reconfort', 'france'] },
+  { emoji: '🍾', nom: 'Baba au rhum', type: 'dessert', tags: ['vege', 'france'] },
+  { emoji: '🍒', nom: 'Gâteau basque', type: 'dessert', tags: ['vege', 'france'] },
+  { emoji: '🧁', nom: 'Quatre-quarts', type: 'dessert', tags: ['vege', 'reconfort', 'france'] },
+  { emoji: '🥛', nom: 'Gâteau au yaourt', type: 'dessert', tags: ['rapide', 'vege', 'reconfort', 'france'] },
+  { emoji: '🍋', nom: 'Cake au citron', type: 'dessert', tags: ['vege', 'france'] },
+  { emoji: '🍎', nom: 'Pommes au four', type: 'dessert', tags: ['vege', 'leger', 'reconfort', 'france'] },
+  { emoji: '🍏', nom: 'Compote maison', type: 'dessert', tags: ['vege', 'leger', 'france'] },
+  { emoji: '🍯', nom: 'Fromage blanc au miel', type: 'dessert', tags: ['rapide', 'vege', 'leger', 'france'] },
+  { emoji: '🍓', nom: 'Fraises chantilly', type: 'dessert', tags: ['rapide', 'vege', 'leger', 'france'] },
+  { emoji: '🍑', nom: 'Pêches rôties au miel', type: 'dessert', tags: ['rapide', 'vege', 'leger', 'france'] },
+  { emoji: '🍊', nom: 'Salade d\'agrumes', type: 'dessert', tags: ['rapide', 'vege', 'leger', 'france'] },
+  { emoji: '🍨', nom: 'Dame blanche', type: 'dessert', tags: ['rapide', 'vege', 'france'] },
+  { emoji: '☕', nom: 'Café gourmand', type: 'dessert', tags: ['rapide', 'vege', 'france'] },
+  { emoji: '🍋', nom: 'Sorbet citron', type: 'dessert', tags: ['rapide', 'vege', 'leger', 'france'] },
+  { emoji: '🍨', nom: 'Nougat glacé', type: 'dessert', tags: ['vege', 'france'] },
+  { emoji: '🍦', nom: 'Omelette norvégienne', type: 'dessert', tags: ['vege', 'france'] },
+  { emoji: '🍫', nom: 'Fondue au chocolat', type: 'dessert', tags: ['vege', 'reconfort', 'france'] },
+
+  // ---------- Desserts du monde ----------
+  { emoji: '☕', nom: 'Tiramisu', type: 'dessert', tags: ['vege', 'commande', 'monde'] },
+  { emoji: '🍮', nom: 'Panna cotta aux fruits rouges', type: 'dessert', tags: ['monde'] },
+  { emoji: '🍨', nom: 'Affogato', type: 'dessert', tags: ['rapide', 'vege', 'monde'] },
+  { emoji: '🥐', nom: 'Cannoli siciliens', type: 'dessert', tags: ['vege', 'commande', 'monde'] },
+  { emoji: '🍰', nom: 'Cheesecake new-yorkais', type: 'dessert', tags: ['vege', 'monde'] },
+  { emoji: '🍰', nom: 'Cheesecake japonais soufflé', type: 'dessert', tags: ['vege', 'monde'] },
+  { emoji: '🍫', nom: 'Brownies', type: 'dessert', tags: ['vege', 'reconfort', 'monde'] },
+  { emoji: '🍪', nom: 'Cookies tout chauds', type: 'dessert', tags: ['rapide', 'vege', 'reconfort', 'monde'] },
+  { emoji: '🥕', nom: 'Carrot cake', type: 'dessert', tags: ['vege', 'monde'] },
+  { emoji: '🍌', nom: 'Banana bread', type: 'dessert', tags: ['vege', 'reconfort', 'monde'] },
+  { emoji: '🥞', nom: 'Pancakes au sirop d\'érable', type: 'dessert', tags: ['rapide', 'vege', 'reconfort', 'monde'] },
+  { emoji: '🥧', nom: 'Apple pie', type: 'dessert', tags: ['vege', 'reconfort', 'monde'] },
+  { emoji: '🍎', nom: 'Crumble pommes-fruits rouges', type: 'dessert', tags: ['vege', 'reconfort', 'monde'] },
+  { emoji: '🍮', nom: 'Sticky toffee pudding', type: 'dessert', tags: ['vege', 'reconfort', 'monde'] },
+  { emoji: '🍌', nom: 'Banoffee pie', type: 'dessert', tags: ['vege', 'monde'] },
+  { emoji: '🍋', nom: 'Key lime pie', type: 'dessert', tags: ['vege', 'monde'] },
+  { emoji: '🍓', nom: 'Pavlova aux fruits rouges', type: 'dessert', tags: ['vege', 'leger', 'monde'] },
+  { emoji: '🍎', nom: 'Strudel aux pommes', type: 'dessert', tags: ['vege', 'monde'] },
+  { emoji: '🍒', nom: 'Forêt-noire', type: 'dessert', tags: ['vege', 'monde'] },
+  { emoji: '🥞', nom: 'Kaiserschmarrn', type: 'dessert', tags: ['vege', 'reconfort', 'monde'] },
+  { emoji: '🍩', nom: 'Donuts', type: 'dessert', tags: ['vege', 'commande', 'monde'] },
+  { emoji: '🧁', nom: 'Muffins aux myrtilles', type: 'dessert', tags: ['vege', 'monde'] },
+  { emoji: '🥖', nom: 'Churros & chocolat chaud', type: 'dessert', tags: ['vege', 'reconfort', 'commande', 'monde'] },
+  { emoji: '🍮', nom: 'Crème catalane', type: 'dessert', tags: ['vege', 'monde'] },
+  { emoji: '🥧', nom: 'Pastéis de nata', type: 'dessert', tags: ['vege', 'commande', 'monde'] },
+  { emoji: '🥛', nom: 'Tres leches', type: 'dessert', tags: ['vege', 'monde'] },
+  { emoji: '🍫', nom: 'Brigadeiros', type: 'dessert', tags: ['rapide', 'vege', 'monde'] },
+  { emoji: '🍯', nom: 'Baklava', type: 'dessert', tags: ['vege', 'commande', 'monde'] },
+  { emoji: '🌙', nom: 'Cornes de gazelle', type: 'dessert', tags: ['vege', 'commande', 'monde'] },
+  { emoji: '🍊', nom: 'Oranges à la cannelle', type: 'dessert', tags: ['rapide', 'vege', 'leger', 'monde'] },
+  { emoji: '🌸', nom: 'Mhalabiya à la fleur d\'oranger', type: 'dessert', tags: ['vege', 'leger', 'monde'] },
+  { emoji: '🍡', nom: 'Mochis glacés', type: 'dessert', tags: ['vege', 'commande', 'monde'] },
+  { emoji: '🥞', nom: 'Dorayaki', type: 'dessert', tags: ['vege', 'monde'] },
+  { emoji: '🍵', nom: 'Glace au thé matcha', type: 'dessert', tags: ['vege', 'monde'] },
+  { emoji: '🍧', nom: 'Bingsu', type: 'dessert', tags: ['vege', 'monde'] },
+  { emoji: '🥥', nom: 'Perles de coco', type: 'dessert', tags: ['vege', 'commande', 'monde'] },
+  { emoji: '🥭', nom: 'Mango sticky rice', type: 'dessert', tags: ['vege', 'commande', 'monde'] },
+  { emoji: '🍩', nom: 'Gulab jamun', type: 'dessert', tags: ['vege', 'commande', 'monde'] },
+  { emoji: '🥭', nom: 'Lassi à la mangue', type: 'dessert', tags: ['rapide', 'vege', 'leger', 'monde'] },
+  { emoji: '🧀', nom: 'Knafeh', type: 'dessert', tags: ['vege', 'commande', 'monde'] },
+  { emoji: '🍫', nom: 'Mug cake au chocolat', type: 'dessert', tags: ['rapide', 'vege', 'reconfort', 'monde'] },
+  { emoji: '🥣', nom: 'Yaourt grec, granola & fruits', type: 'dessert', tags: ['rapide', 'vege', 'leger', 'monde'] },
+  { emoji: '🫐', nom: 'Smoothie bowl', type: 'dessert', tags: ['rapide', 'vege', 'leger', 'monde'] },
+
+  // ---------- Pour les flemmards ----------
+  { emoji: '🍫', nom: 'Juste un carré de chocolat', type: 'dessert', tags: ['rapide', 'vege', 'leger'] },
+  { emoji: '🍨', nom: 'Pot de glace devant un film', type: 'dessert', tags: ['rapide', 'vege', 'reconfort'] },
 ];
