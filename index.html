@@ -279,7 +279,7 @@ tr.match td{background:color-mix(in srgb,var(--yes) 14%,transparent)}
 </div>
 <div class="toast" id="toast"></div>
 
-<script src="dishes.js"></script>
+<script src="dishes.js?v=2"></script>
 <script>
 /* ---------- Données ---------- */
 // La liste des entrées, plats et desserts est dans dishes.js (window.PLATS)
@@ -415,14 +415,16 @@ function buildDeck(){
   const list = COURSE_ORDER.filter(c => courses.includes(c));
   const per = list.length > 1 ? Math.max(4, Math.round(size / list.length)) : size;
   const deck = [], missing = [];
+  const absent = [];
   list.forEach(c => {
+    if(!DISHES.some(d => courseOf(d) === c)) absent.push(COURSES[c].plural);
     const pool = DISHES.filter(d => courseOf(d) === c && ok(d));
     const mine = shuffle(custom.filter(x => (x[2] || 'plat') === c).map(x => [x[0], x[1], c + ' perso'])).slice(0, per);
     const part = shuffle(mine.concat(shuffle(pool)).slice(0, per));
     if(part.length < 2) missing.push(COURSES[c].plural);
     deck.push(...part);   // entrées, puis plats, puis desserts
   });
-  return {deck, missing};
+  return {deck, missing, absent};
 }
 function uniq(list){
   const seen={};
@@ -430,7 +432,8 @@ function uniq(list){
 }
 $('#start').onclick = () => {
   const err=$('#home-error'); err.textContent='';
-  const {deck, missing} = buildDeck();
+  const {deck, missing, absent} = buildDeck();
+  if(absent.length){ err.textContent=`Ton fichier dishes.js ne contient pas ${listNames(absent.map(x => 'de ' + x))} : envoie sa nouvelle version sur GitHub, puis recharge la page.`; return; }
   if(missing.length || deck.length < 3){ err.textContent=`Pas assez ${de(listNames(missing.length ? missing : ['idées']))} avec ces filtres : retire une envie ou ajoute tes recettes.`; return; }
   if(mode === 'remote'){
     const me=(names[0]||'').trim();
