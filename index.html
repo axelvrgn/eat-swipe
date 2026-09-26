@@ -257,57 +257,13 @@ tr.match td{background:color-mix(in srgb,var(--yes) 14%,transparent)}
 </div>
 <div class="toast" id="toast"></div>
 
+<script src="dishes.js"></script>
 <script>
 /* ---------- Données ---------- */
-const DISHES = [
-  ['🥓','Pâtes carbonara','rapide reconfort'],
-  ['🍕','Pizza','reconfort commande'],
-  ['🍔','Burgers maison','reconfort'],
-  ['🍣','Sushis','leger commande'],
-  ['🥗','Salade César','rapide leger'],
-  ['🍲','Pot-au-feu','reconfort'],
-  ['🌮','Tacos mexicains','rapide'],
-  ['🍛','Curry de pois chiches','vege reconfort'],
-  ['🦐','Paella','reconfort'],
-  ['🍜','Ramen','reconfort commande'],
-  ['🥞','Galettes complètes','rapide'],
-  ['🧀','Raclette','reconfort'],
-  ['🫕','Fondue savoyarde','vege reconfort'],
-  ['🍳','Omelette & salade','rapide vege leger'],
-  ['🥙','Kebab','commande'],
-  ['🍗','Poulet rôti & frites','reconfort'],
-  ['🐟','Saumon & riz','rapide leger'],
-  ['🥦','Gratin de légumes','vege reconfort'],
-  ['🍝','Lasagnes','reconfort'],
-  ['🍚','Riz cantonais','rapide'],
-  ['🥟','Raviolis chinois','commande'],
-  ['🥑','Poke bowl','leger commande'],
-  ['🌯','Wraps','rapide'],
-  ['🥧','Quiche lorraine','reconfort'],
-  ['🍅','Soupe tomate & grilled cheese','rapide vege reconfort'],
-  ['🥔','Tartiflette','reconfort'],
-  ['🌶️','Chili con carne','reconfort'],
-  ['🥬','Buddha bowl','vege leger'],
-  ['🔥','Barbecue','reconfort'],
-  ['🥜','Pad thaï','rapide commande'],
-  ['🥘','Couscous','reconfort'],
-  ['🥖','Bruschettas','rapide vege leger'],
-  ['🌿','Pâtes au pesto','rapide vege'],
-  ['🥩','Steak frites','rapide reconfort'],
-  ['🧆','Falafels & houmous','vege leger'],
-  ['🍄','Risotto aux champignons','vege reconfort'],
-  ['🥣','Soupe de légumes','vege leger'],
-  ['🥪','Croque-monsieur','rapide reconfort'],
-  ['🍛','Butter chicken','reconfort commande'],
-  ['🫔','Tajine','reconfort'],
-  ['🥒','Taboulé','rapide vege leger'],
-  ['🍟','Fish & chips','reconfort'],
-  ['🥢','Wok de légumes & nouilles','rapide vege'],
-  ['🧇','Brunch du soir','vege reconfort'],
-  ['🍱','Bento japonais','leger commande'],
-  ['🧊','Les restes du frigo','rapide leger'],
-];
-const FILTERS = {rapide:'⚡ Rapide', vege:'🌱 Végé', leger:'🪶 Léger', reconfort:'🛋️ Réconfort', commande:'🛵 À commander'};
+// La liste des plats est dans dishes.js (window.PLATS)
+const DISHES = (window.PLATS || []).map(p => [p.emoji, p.nom, (p.tags || []).join(' ')]);
+const ORIGINS = ['france', 'monde'];
+const FILTERS = {rapide:'⚡ Rapide', vege:'🌱 Végé', leger:'🪶 Léger', reconfort:'🛋️ Réconfort', commande:'🛵 À commander', france:'🥖 Cuisine française', monde:'🌍 Du monde'};
 const TAG_LABELS = {...FILTERS, perso:'💛 Mon plat'};
 
 /* ---------- Outils ---------- */
@@ -408,7 +364,13 @@ $('#custom-list').addEventListener('click', e => {
 });
 
 function buildDeck(){
-  const pool = DISHES.filter(d => filters.every(t => d[2].split(' ').includes(t)));
+  // Les origines (française / du monde) s'additionnent, les autres filtres se cumulent.
+  const origins = filters.filter(t => ORIGINS.includes(t));
+  const others = filters.filter(t => !ORIGINS.includes(t));
+  const pool = DISHES.filter(d => {
+    const tags = d[2].split(' ');
+    return others.every(t => tags.includes(t)) && (!origins.length || origins.some(t => tags.includes(t)));
+  });
   const mine = shuffle(custom.map(c => [c[0], c[1], 'perso'])).slice(0,size);
   return shuffle(mine.concat(shuffle(pool)).slice(0,size));
 }
@@ -668,6 +630,7 @@ function goHome(){
     }catch(e){ renderHome(); show('s-home'); $('#home-error').textContent = "Ce lien de partie est invalide. Lance une nouvelle partie !"; return; }
   }
   renderHome(); show('s-home');
+  if(!DISHES.length) $('#home-error').textContent = "Le fichier dishes.js est introuvable : dépose-le à côté d'index.html.";
 })();
 </script>
 </body>
